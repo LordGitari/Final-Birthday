@@ -1,0 +1,19 @@
+.numberone {
+    background-color: gold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.numberone {
+padding: 20px;
+height: 150px;
+width: 150px;
+border: gold;
+box-sizing: border-box;/*  */
+margin: 30px;
+justify-items: center;
+}
+.numbertwo {
+    padding: 20px;
+    margin: 30px;
+    border: yellow;
+    justify-items: e;
+}

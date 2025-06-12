@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="Author" content="Mr.Gitari">
+    <meta charset="UTF-8">
+    <title>Starfield Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #050a1a;
+        }
+        #continue-btn {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 38px;
+            font-size: 1.3rem;
+            background: linear-gradient(90deg, #00eaff 60%, #ffd700 100%);
+            color: #181818;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #00eaff80;
+            cursor: pointer;
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+            z-index: 10;
+            transition: opacity 0.5s;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;"></canvas>
+    <button id="continue-btn">Yes</button>
+    <script>
+    // --- Starfield Setup ---
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const starColors = ['#fff', '#aaf', '#ffa', '#faa', '#aff', '#8ff', '#faf'];
+    const STAR_COUNT = 350;
+    let stars = Array.from({length: STAR_COUNT}, () => ({
+        x: Math.random() * w - w/2,
+        y: Math.random() * h - h/2,
+        z: Math.random() * w,
+        prevZ: null,
+        color: starColors[Math.floor(Math.random() * starColors.length)]
+    }));
+
+    // --- Text and Button Logic ---
+    const messages = [
+        "Join me in this adventure as we celebrate 17 years of life",
+        "Every moment is a new beginning",
+        "Thank you for being part of my journey",
+        "Let's make more memories together!",
+        "Stay tuned for more surprises in the future",
+        "But first, let's enjoy the stars",
+        "And before i forget",    
+        "I have a surprise for you",
+        "Are you ready?"
+    ];
+    let currentMsg = 0;
+    let msgTimer = 0;
+    const MSG_DURATION = 300;
+    const font = "bold 2.2rem 'Segoe UI', 'Arial', sans-serif";
+    let textAlpha = 0;
+    let showText = true;
+    const continueBtn = document.getElementById('continue-btn');
+    let mouse = { x: 0, y: 0, active: false, clientX: 0, clientY: 0 };
+
+    canvas.addEventListener('mousemove', e => {
+        mouse.x = (e.clientX - w/2) / w;
+        mouse.y = (e.clientY - h/2) / h;
+        mouse.active = true;
+        mouse.clientX = e.clientX;
+        mouse.clientY = e.clientY;
+    });
+    canvas.addEventListener('mouseleave', () => { mouse.active = false; });
+    canvas.addEventListener('click', () => {
+        if (currentMsg < messages.length - 1) {
+            currentMsg = (currentMsg + 1) % messages.length;
+            msgTimer = 0;
+        }
+    });
+
+    // --- Animation State ---
+    let transitionState = "normal"; // normal, zooming, fading, newstars, done
+    let zoom = 1;
+    let zoomFrames = 0;
+    let fade = 0;
+    let newStarsAlpha = 0;
+    let newStars = [];
+
+    function draw() {
+        // Animate background color
+        let t = Date.now() * 0.0001;
+        let bg = `rgb(${10+Math.floor(10*Math.sin(t))},${10+Math.floor(20*Math.cos(t))},30)`;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        // --- Starfield Drawing ---
+        if (transitionState === "zooming" || transitionState === "fading" || transitionState === "newstars") {
+            ctx.save();
+            ctx.globalAlpha = 1;
+            ctx.setTransform(zoom, 0, 0, zoom, w/2*(1-zoom), h/2*(1-zoom));
+        }
+        for (let star of stars) {
+            star.prevZ = star.z;
+            let speed = (transitionState === "zooming" || transitionState === "fading" || transitionState === "newstars") ? 18 : (mouse.active ? 2 : 4);
+            star.z -= speed;
+            if (star.z < 1) {
+                star.x = Math.random() * w - w/2;
+                star.y = Math.random() * h - h/2;
+                star.z = w;
+                star.prevZ = star.z;
+                star.color = starColors[Math.floor(Math.random() * starColors.length)];
+            }
+            const sx = (star.x / star.z) * w + w/2;
+            const sy = (star.y / star.z) * h + h/2;
+            const px = (star.x / star.prevZ) * w + w/2;
+            const py = (star.y / star.prevZ) * h + h/2;
+            ctx.save();
+            ctx.strokeStyle = star.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = star.color;
+            ctx.lineWidth = Math.max(0.5, 2 - star.z / w);
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(sx, sy);
+            ctx.stroke();
+            ctx.restore();
+        }
+        if (transitionState === "zooming" || transitionState === "fading" || transitionState === "newstars") {
+            ctx.setTransform(1,0,0,1,0,0);
+            ctx.restore();
+        }
+
+        // --- New Stars Fade In (after zoom/fade) ---
+        if (transitionState === "newstars") {
+            ctx.save();
+            ctx.globalAlpha = newStarsAlpha;
+            for (let star of newStars) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI*2);
+                ctx.fillStyle = star.c;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = star.c;
+                ctx.fill();
+                ctx.restore();
+            }
+            ctx.restore();
+        }
+
+        // --- Text Drawing ---
+        if (showText && transitionState === "normal") {
+            // Slideshow logic
+            msgTimer++;
+            if (msgTimer > MSG_DURATION && currentMsg < messages.length - 1) {
+                msgTimer = 0;
+                currentMsg = (currentMsg + 1) % messages.length;
+            }
+            const words = messages[currentMsg].split(" ");
+            // Show continue button only on last message
+            if (currentMsg === messages.length - 1) {
+                continueBtn.style.display = 'block';
+            } else {
+                continueBtn.style.display = 'none';
+            }
+            // Fade in text if mouse is active
+            if (mouse.active) {
+                textAlpha = Math.min(textAlpha + 0.15, 1);
+            } else {
+                textAlpha = Math.max(textAlpha - 0.15, 0);
+            }
+            if (textAlpha > 0) {
+                ctx.save();
+                ctx.font = font;
+                ctx.textBaseline = "middle";
+                ctx.textAlign = "left";
+                ctx.shadowBlur = 18;
+                ctx.shadowColor = "#fff";
+                let parallaxX = mouse.active ? mouse.x * 40 : 0;
+                let parallaxY = mouse.active ? mouse.y * 20 : 0;
+                let wordWidths = words.map(word => ctx.measureText(word).width);
+                let spaceWidth = ctx.measureText(" ").width;
+                let totalWidth = wordWidths.reduce((a, b) => a + b, 0) + spaceWidth * (words.length - 1);
+                let startX = w / 2 - totalWidth / 2 + parallaxX;
+                let y = h / 2 + parallaxY;
+                let relX = mouse.clientX - startX;
+                let accWidth = 0;
+                let wordIndex = 0;
+                for (let i = 0; i < words.length; i++) {
+                    accWidth += wordWidths[i] + spaceWidth;
+                    if (relX < accWidth) {
+                        wordIndex = i;
+                        break;
+                    }
+                }
+                let x = startX;
+                for (let i = 0; i < words.length; i++) {
+                    ctx.save();
+                    if (i !== wordIndex) {
+                        ctx.globalAlpha = 0.3 * textAlpha;
+                        ctx.fillStyle = "#aaa";
+                        ctx.translate(x + wordWidths[i]/2, y);
+                        ctx.scale(0.85, 0.85);
+                        ctx.fillText(words[i], -wordWidths[i]/2, 0);
+                        ctx.restore();
+                        x += wordWidths[i] + spaceWidth;
+                        continue;
+                    } else {
+                        ctx.globalAlpha = 1 * textAlpha;
+                        ctx.fillStyle = "#fff";
+                        ctx.shadowBlur = 32;
+                        ctx.shadowColor = "#fff";
+                        ctx.fillText(words[i], x, y);
+                    }
+                    ctx.restore();
+                    x += wordWidths[i] + spaceWidth;
+                }
+                ctx.restore();
+            }
+        }
+
+        // --- Transition Animation Logic ---
+        if (transitionState === "zooming") {
+            zoom += 0.22;
+            zoomFrames++;
+            if (zoomFrames > 120) { // ~5s at 60fps
+                transitionState = "fading";
+                fade = 0;
+            }
+        } else if (transitionState === "fading") {
+            fade += 0.025;
+            ctx.save();
+            ctx.globalAlpha = fade;
+            ctx.fillStyle = "#050a1a";
+            ctx.fillRect(0, 0, w, h);
+            ctx.restore();
+            if (fade >= 1) {
+                // Prepare new stars for the bridge
+                newStars = Array.from({length: 30}, () => ({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.5 + 0.7,
+                    c: starColors[Math.floor(Math.random() * starColors.length)]
+                }));
+                newStarsAlpha = 0;
+                transitionState = "newstars";
+            }
+        } else if (transitionState === "newstars") {
+            newStarsAlpha += 0.025;
+            if (newStarsAlpha > 1) newStarsAlpha = 1;
+            if (newStarsAlpha === 1) {
+                // Hold for a moment, then redirect
+                setTimeout(() => {
+                    transitionState = "done";
+                    window.location.href = "autopilot.html";
+                }, 1200);
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+    draw();
+
+    // --- Button/Transition Handler ---
+    let transitioning = false;
+    continueBtn.addEventListener('click', () => {
+        if (transitioning) return;
+        transitioning = true;
+        // Instantly hide text and button, but keep stars running
+        showText = false;
+        textAlpha = 0;
+        continueBtn.style.opacity = '0';
+        // Start the cinematic transition
+        setTimeout(() => {
+            transitionState = "zooming";
+            zoom = 1;
+            zoomFrames = 0;
+        }, 400); // 0.4s delay for text to fade out
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+body {
+    background: #181a20; /* dark background */
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.manga-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 24px;
+    background: transparent;
+}
+.panel {
+    background: #23242a;
+    border: 2px solid #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    height: auto;           /* Panel height determined by content (original) */
+    min-height: 0;
+}
+.panel img {
+    width: 100%;
+    height: auto;           /* Original: image height is auto */
+    min-height: unset;      /* Remove forced min-height */
+    object-fit: contain;    /* Original: image fits inside panel */
+    display: block;
+    border-bottom: 1px solid #333;
+}
+.caption {
+    font-family: 'Bangers', 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 1.25rem;
+    color: #fff;
+    background: linear-gradient(120deg, #23242a 80%, #e63946 100%);
+    padding: 12px 18px;
+    border-radius: 18px 18px 18px 0;
+    margin: 8px;
+    box-shadow: 2px 4px 16px #000, 0 0 0 3px #e63946 inset;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    max-width: 80%;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 8px #e63946, 0 0 2px #000;
+    border-left: 4px solid #e63946;
+    border-bottom: 2px solid #fff;
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+.caption.intense {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(90deg, #e63946 60%, #fff 100%);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-left: 6px solid #e63946;
+    border-bottom: 3px solid #fff;
+    text-shadow: 0 0 12px #e63946, 2px 2px 0 #000;
+    animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-8px); }
+    40%, 60% { transform: translateX(8px); }
+}
+.panel.wide {
+    grid-column: span 3;
+    text-align: center;
+    border-style: dashed;
+    background: #23242a;
+}
+.birthday-message h1 {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-size: 2.2rem;
+    margin: 0.5em 0 0.2em 0;
+    color: #e63946;
+    text-shadow: 2px 2px 0 #fff, 4px 4px 0 #111;
+}
+.birthday-message p {
+    font-size: 1.2rem;
+    color: #eee;
+}

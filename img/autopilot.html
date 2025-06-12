@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Birthday Kimberly!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts for anime/manga style -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            color: #ffd700;
+            font-family: 'Montserrat', Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(120deg, #181818 0%, #232323 100%);
+        }
+        .star-bg, .ember-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 16px 16px 16px;
+        }
+        .main-title {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: #ffd700;
+            text-shadow: 0 0 18px #fff8, 0 0 32px #ffd700cc, 2px 2px 18px #000;
+            text-align: center;
+            margin-bottom: 0.5em;
+            letter-spacing: 2px;
+        }
+        .message {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 2em;
+            color: #181818;
+            background: linear-gradient(120deg, #ffd700 60%, #fffbe6 100%);
+            border-radius: 18px;
+            padding: 18px 24px;
+            box-shadow: 0 4px 24px #ffd70080;
+            font-family: 'Montserrat', Arial, sans-serif;
+            border: 2px solid #ffd700;
+        }
+        .anime-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 2em;
+        }
+        .card {
+            background: #181818;
+            border: 2px solid #ffd700;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #ffd70040;
+            width: 260px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            animation: cardIn 0.8s cubic-bezier(.23,1.12,.67,1.01) forwards;
+        }
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.5s; }
+        .card:nth-child(3) { animation-delay: 0.8s; }
+        .card:hover {
+            transform: scale(1.04) rotate(-2deg);
+            box-shadow: 0 8px 32px #ffd70080, 0 0 0 4px #fff2;
+        }
+        .card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 2px solid #ffd700;
+            background: #232323;
+        }
+        .card .character {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: #ffd700;
+            text-shadow: 1px 1px 8px #fff, 0 0 8px #ffd700;
+            text-align: center;
+            margin: 0.5em 0 0.2em 0;
+        }
+        .card .anime {
+            font-size: 1.1rem;
+            color: #fffbe6;
+            text-align: center;
+            margin-bottom: 1em;
+            opacity: 0.85;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 2em;
+            color: #ffd700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 900px) {
+            .anime-cards { flex-direction: column; align-items: center; }
+            .card { width: 90vw; max-width: 340px; }
+        }
+        @keyframes cardIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        /* System Modal Styles */
+        .system-modal {
+            display: none;
+            position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 20, 60, 0.55);
+            align-items: center; justify-content: center;
+        }
+        .system-modal.active { display: flex; }
+        .system-content {
+            background: linear-gradient(120deg, rgba(26,42,79,0.92) 60%, rgba(46,92,168,0.85) 100%);
+            border: 3px solid #00eaff;
+            box-shadow: 0 0 32px 8px #00eaffcc, 0 0 64px 16px #1a2a4f99;
+            color: #e0f7ff;
+            padding: 2em 3em 2.5em 3em;
+            border-radius: 18px;
+            font-size: 1.4rem;
+            text-align: center;
+            position: relative;
+            min-width: 320px;
+            max-width: 90vw;
+            animation: systemPop 0.4s cubic-bezier(.4,1.6,.6,1);
+            overflow: visible;
+            filter: drop-shadow(0 0 32px #00eaffcc);
+            backdrop-filter: blur(3px) brightness(1.08);
+        }
+        @keyframes systemPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .system-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: #00eaff;
+            margin-bottom: 1em;
+            letter-spacing: 2px;
+            text-shadow: 0 0 16px #00eaff, 0 0 32px #00eaff99;
+            text-transform: uppercase;
+        }
+        .system-close {
+            position: absolute; top: 10px; right: 18px;
+            color: #00eaff; font-size: 2rem; cursor: pointer;
+            font-family: Arial, sans-serif;
+            z-index: 2;
+            text-shadow: 0 0 8px #00eaff;
+            transition: color 0.2s;
+        }
+        .system-close:hover {
+            color: #fff;
+        }
+        .system-body {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.3rem;
+            color: #e0f7ff;
+            text-shadow: 0 0 8px #00eaff, 0 0 2px #fff;
+            min-height: 2em;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5em;
+            white-space: pre-line;
+            z-index: 2;
+            position: relative;
+            animation: systemTextGlow 2s infinite alternate;
+        }
+        @keyframes systemTextGlow {
+            0% { text-shadow: 0 0 8px #00eaff, 0 0 2px #fff; }
+            100% { text-shadow: 0 0 16px #00eaff, 0 0 8px #fff; }
+        }
+        .scanlines {
+            pointer-events: none;
+            position: absolute;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(0,0,40,0.12) 0px,
+                rgba(0,0,40,0.12) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            z-index: 1;
+            mix-blend-mode: lighten;
+            animation: scanmove 2s linear infinite;
+        }
+        @keyframes scanmove {
+            0% { background-position-y: 0; }
+            100% { background-position-y: 8px; }
+        }
+        .system-pointer {
+            position: absolute;
+            left: 50%;
+            bottom: -18px;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 18px;
+            z-index: 4;
+            pointer-events: none;
+        }
+        .system-pointer::after {
+            content: "";
+            display: block;
+            width: 0; height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 18px solid #00eaff;
+            filter: drop-shadow(0 0 12px #00eaffcc);
+            opacity: 0.85;
+        }
+        /* Zenitsu Modal Black & Gold Theme */
+        .zenitsu-bg {
+            background: linear-gradient(120deg, #181818 60%, #ffd700 100%) !important;
+            border: 3px solid #ffd700 !important;
+            box-shadow: 0 0 18px 4px #ffd70088, 0 0 48px 12px #18181877 !important;
+            color: #ffd700 !important;
+            filter: drop-shadow(0 0 18px #ffd70088);
+            border-radius: 28px !important;
+            position: relative;
+        }
+        .zenitsu-title {
+            color: #ffd700 !important;
+            text-shadow: 0 0 12px #ffd700, 0 0 24px #18181899 !important;
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+        }
+        .zenitsu-body {
+            color: #ffd700 !important;
+            text-shadow: 0 0 6px #ffd700, 0 0 2px #181818 !important;
+            animation: zenitsuTextGlow 1.2s infinite alternate;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        @keyframes zenitsuTextGlow {
+            0% { text-shadow: 0 0 6px #ffd700, 0 0 2px #181818; }
+            100% { text-shadow: 0 0 14px #ffd700, 0 0 8px #181818; }
+        }
+        .zenitsu-pointer {
+            position: absolute;
+            left: 50%;
+            bottom: -18px;
+            transform: translateX(-50%);
+            width: 36px;
+            height: 18px;
+            z-index: 4;
+            pointer-events: none;
+        }
+        .zenitsu-pointer::after {
+            content: "";
+            display: block;
+            width: 0; height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 18px solid #ffd700;
+            filter: drop-shadow(0 0 8px #ffd70088);
+            opacity: 0.7;
+        }
+        /* Level up bar for Solo Leveling */
+        .levelup-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1.5em;
+            gap: 0.7em;
+        }
+        .levelup-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: #ffd700;
+            letter-spacing: 2px;
+            margin-bottom: 0.2em;
+        }
+        .levelup-bar {
+            width: 220px;
+            height: 18px;
+            background: #232f4b;
+            border-radius: 10px;
+            border: 2px solid #00eaff;
+            overflow: hidden;
+            margin-bottom: 0.5em;
+            box-shadow: 0 0 8px #ffd70080;
+        }
+        .levelup-bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #00eaff 60%, #b3eaff 100%);
+            border-radius: 10px;
+            box-shadow: 0 0 12px #00eaffcc;
+            transition: width 1.2s cubic-bezier(.4,1.6,.6,1);
+        }
+        .levelup-stats {
+            display: flex;
+            gap: 1.2em;
+            font-family: 'Share Tech Mono', monospace;
+            color: #ffd700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        /* Solo Leveling (Jinwoo) - Blue */
+        #jinwoo-system .levelup-title,
+        #jinwoo-system .levelup-stats span {
+            color: #00eaff;
+        }
+        #jinwoo-system .levelup-bar {
+            background: #232f4b;
+            border: 2px solid #00eaff;
+            box-shadow: 0 0 8px #00eaff80;
+        }
+        #jinwoo-system .levelup-bar-fill {
+            background: linear-gradient(90deg, #00eaff 60%, #b3eaff 100%);
+            box-shadow: 0 0 12px #00eaffcc;
+        }
+
+        /* Zenitsu - Gold */
+        #zenitsu-modal .levelup-title,
+        #zenitsu-modal .levelup-stats span {
+            color: #ffd700;
+        }
+        #zenitsu-modal .levelup-bar {
+            background: #232323;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 8px #ffd70080;
+        }
+        #zenitsu-modal .levelup-bar-fill {
+            background: linear-gradient(90deg, #ffd700 60%, #fffbe6 100%);
+            box-shadow: 0 0 12px #ffd700cc;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="star-bg"></canvas>
+    <canvas class="ember-bg"></canvas>
+    <div class="container">
+        <div class="main-title">Happy Birthday Kimberly!</div>
+        <div class="message">
+            Reality doesn't deserve you cause you are more of a fantasy
+        </div>
+        <div class="anime-cards">
+            <!-- Card 1: Solo Leveling with System Screen (fully restored original) -->
+            <div class="card" onclick="showSystem()">
+                <img src="proxy-image (1).jpeg" alt="Sung Jinwoo and Igris from Solo Leveling">
+                <div class="character">Sung Jinwoo &amp; Igris</div>
+                <div class="anime">Solo Leveling</div>
+            </div>
+            <!-- Card 2: Gojo Satoru Modal -->
+            <div class="card" onclick="showGojo()">
+                <img src="proxy-image.jpeg" alt="Gojo Satoru from Jujutsu Kaisen">
+                <div class="character">Gojo Satoru</div>
+                <div class="anime">Jujutsu Kaisen</div>
+            </div>
+            <!-- Card 3: Zenitsu Modal (black & gold, Solo Leveling modal structure) -->
+            <div class="card" onclick="showZenitsu()">
+                <img src="proxy-image.png" alt="Zenitsu from Demon Slayer">
+                <div class="character">Zenitsu</div>
+                <div class="anime">Demon Slayer</div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>With love from your favorite anime worlds 💖</span>
+        </div>
+    </div>
+    <!-- System Message Modal (Solo Leveling) -->
+    <div id="jinwoo-system" class="system-modal">
+        <div class="system-content">
+            <span class="system-close" onclick="closeSystem()">&times;</span>
+            <div class="system-title">YOU HAVE A NEW NOTIFICATION</div>
+            <div class="system-body" id="system-body"></div>
+            <div class="levelup-menu" id="levelup-menu" style="display:none;">
+                <div class="levelup-title">LEVEL UP!</div>
+                <div class="levelup-bar">
+                    <div class="levelup-bar-fill"></div>
+                </div>
+                <div class="levelup-stats">
+                    <span>STR +5</span>
+                    <span>AGI +3</span>
+                    <span>INT +2</span>
+                </div>
+            </div>
+            <canvas class="system-particles"></canvas>
+            <div class="scanlines"></div>
+            <div class="system-pointer"></div>
+        </div>
+    </div>
+    <!-- Gojo Modal -->
+    <div id="gojo-modal" class="system-modal">
+        <div class="system-content">
+            <span class="system-close" onclick="closeGojo()">&times;</span>
+            <div class="system-title">SATORU GOJO</div>
+            <div class="system-body" id="gojo-body"></div>
+            <div style="margin-top:1.5em; display:flex; flex-direction:column; align-items:center;">
+                <img src="proxy-image (2).jpeg" alt="Gojo Satoru sign-off"
+                     style="width:110px; height:110px; object-fit:cover; border-radius:50%; box-shadow:0 0 18px #00eaffcc; margin-bottom:0.7em;">
+            </div>
+            <div class="scanlines"></div>
+            <div class="system-pointer"></div>
+        </div>
+    </div>
+    <!-- Zenitsu Modal: Black & Gold, Solo Leveling modal structure -->
+    <div id="zenitsu-modal" class="system-modal">
+        <div class="system-content zenitsu-bg">
+            <span class="system-close" onclick="closeZenitsu()">&times;</span>
+            <div class="system-title zenitsu-title">ZENITSU AGATSUMA</div>
+            <div class="system-body zenitsu-body" id="zenitsu-body"></div>
+            <div class="scanlines"></div>
+            <div class="zenitsu-pointer"></div>
+        </div>
+    </div>
+    <audio id="system-sound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae0c7.mp3"></audio>
+    <script>
+    // Star background
+    const goldColors = [
+        "#ffd700", "#fffbe6", "#fff8b0", "#fff2a8", "#fffbe6", "#fff8b0", "#ffd700"
+    ];
+    const canvas = document.querySelector('.star-bg');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth, h = window.innerHeight;
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    const STAR_COUNT = 120;
+    const stars = Array.from({length: STAR_COUNT}, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.2 + 0.5,
+        s: Math.random() * 0.5 + 0.2,
+        o: Math.random() * 0.6 + 0.4,
+        c: goldColors[Math.floor(Math.random() * goldColors.length)]
+    }));
+    function drawStars() {
+        ctx.clearRect(0, 0, w, h);
+        for (let star of stars) {
+            ctx.save();
+            ctx.globalAlpha = star.o * (0.7 + 0.3 * Math.sin(Date.now() * 0.001 + star.x));
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            ctx.fillStyle = star.c;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = star.c;
+            ctx.fill();
+            ctx.restore();
+            // Twinkle
+            star.x += Math.sin(Date.now() * 0.0002 + star.y) * 0.02;
+            star.y += Math.cos(Date.now() * 0.0002 + star.x) * 0.02;
+            // Wrap
+            if (star.x < 0) star.x = w;
+            if (star.x > w) star.x = 0;
+            if (star.y < 0) star.y = h;
+            if (star.y > h) star.y = 0;
+        }
+        requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // Solo Leveling Modal
+    function showSystem() {
+        document.getElementById('jinwoo-system').classList.add('active');
+        document.getElementById('system-sound').currentTime = 0;
+        document.getElementById('system-sound').play();
+        typeSystemMessage("Happy Birthday", function() {
+            document.getElementById('levelup-menu').style.display = 'flex';
+            animateLevelBar();
+        });
+        startParticles();
+    }
+    function closeSystem() {
+        document.getElementById('jinwoo-system').classList.remove('active');
+        document.getElementById('system-body').textContent = '';
+        document.getElementById('levelup-menu').style.display = 'none';
+        stopParticles();
+    }
+    function typeSystemMessage(text, callback) {
+        const el = document.getElementById('system-body');
+        el.textContent = '';
+        let i = 0;
+        let cursor = true;
+        function type() {
+            if (i <= text.length) {
+                el.textContent = text.slice(0, i) + (cursor ? '|' : '');
+                cursor = !cursor;
+                i++;
+                setTimeout(type, 60);
+            } else {
+                el.textContent = text;
+                if (callback) setTimeout(callback, 400);
+            }
+        }
+        type();
+    }
+    function animateLevelBar() {
+        const bar = document.querySelector('.levelup-bar-fill');
+        bar.style.width = '0';
+        bar.style.animation = 'none';
+        void bar.offsetWidth;
+        bar.style.animation = 'fillBar 1.2s cubic-bezier(.4,1.6,.6,1) forwards';
+        setTimeout(() => { bar.style.width = '100%'; }, 50);
+    }
+    // Particle effect inside system modal
+    let particleAnim;
+    function startParticles() {
+        const canvas = document.querySelector('.system-particles');
+        const ctx = canvas.getContext('2d');
+        function resize() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const PARTICLE_COUNT = 24;
+        const particles = Array.from({length: PARTICLE_COUNT}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 2 + 1,
+            s: Math.random() * 0.5 + 0.2,
+            o: Math.random() * 0.5 + 0.5,
+            dx: (Math.random() - 0.5) * 0.3,
+            dy: (Math.random() - 0.5) * 0.3
+        }));
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) {
+                ctx.save();
+                ctx.globalAlpha = p.o;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = "#00eaff";
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = "#00eaff";
+                ctx.fill();
+                ctx.restore();
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            }
+            particleAnim = requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+    }
+    function stopParticles() {
+        cancelAnimationFrame(particleAnim);
+    }
+
+    // Gojo Modal
+    function showGojo() {
+        document.getElementById('gojo-modal').classList.add('active');
+        typeGojoMessage(
+`Did someone say
+Limitless? More like limitless good looks.
+It appears someone is rivaling my looks, huh Kimberly, but
+I'm too pretty to lose.
+Don’t worry, I’m just here to look cool.
+And to wish you a happy birthday. Well then, see you around.
+
+— Gojo`
+        );
+    }
+    function closeGojo() {
+        document.getElementById('gojo-modal').classList.remove('active');
+        document.getElementById('gojo-body').textContent = '';
+    }
+    function typeGojoMessage(text) {
+        const el = document.getElementById('gojo-body');
+        el.textContent = '';
+        let i = 0;
+        let cursor = true;
+        function type() {
+            if (i <= text.length) {
+                el.textContent = text.slice(0, i) + (cursor ? '|' : '');
+                cursor = !cursor;
+                i++;
+                setTimeout(type, 38 + Math.random() * 40);
+            } else {
+                el.textContent = text;
+            }
+        }
+        type();
+    }
+
+    // Zenitsu Modal
+    function showZenitsu() {
+        document.getElementById('zenitsu-modal').classList.add('active');
+        typeZenitsuMessage(
+`I wish you a happy birthday Kimberly,
+but please don't tell Nezuko about these, ok`
+        );
+    }
+    function closeZenitsu() {
+        document.getElementById('zenitsu-modal').classList.remove('active');
+        document.getElementById('zenitsu-body').textContent = '';
+    }
+    function typeZenitsuMessage(text) {
+        const el = document.getElementById('zenitsu-body');
+        el.textContent = '';
+        let i = 0;
+        let cursor = true;
+        function type() {
+            if (i <= text.length) {
+                el.textContent = text.slice(0, i) + (cursor ? '|' : '');
+                cursor = !cursor;
+                i++;
+                setTimeout(type, 45 + Math.random() * 30);
+            } else {
+                el.textContent = text;
+            }
+        }
+        type();
+    }
+    </script>
+</body>
+</html>

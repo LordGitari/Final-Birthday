@@ -1,0 +1,17 @@
+html{
+    font-display: gold;
+}
+body{
+    background-color: #333;
+}
+.vegetables{
+    font-display: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+:hover{
+    color: gold;
+}
+.fruits{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-feature-settings: "hkna";
+}
